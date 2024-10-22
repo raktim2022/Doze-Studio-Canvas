@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/lenis@1.1.14/dist/lenis.css"
+    />
+    <style>
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .lenis.lenis-smooth iframe {
+        pointer-events: none;
+      }
+      @font-face {
+        font-family: font1;
+        src: url("./Panchang-Variable.ttf");
+      }
+      button {
+        position: relative;
+        overflow: hidden;
+      }
+      .but1::after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all ease 0.7s;
+        top: 50%;
+        left: 50%;
+        z-index: -1;
+        position: absolute;
+        background: #000;
+      }
+      .but1:hover::after {
+        width: 300px;
+        height: 300px;
+      }
+      .but1:hover {
+        color: #fff;
+      }
+      #loader {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        background-color: #000;
+        top: 0;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #loader video {
+        width: 70%;
+        height: 70%;
+      }
+      body {
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+        cursor: none;
+        user-select: none;
+      }
+      .cursor {
+        width: 12px;
+        transition: all cubic-bezier(0.19, 1, 0.22, 1) 1s;
+        height: 12px;
+        border-radius: 50%;
+        background: #000;
+        position: absolute;
+        z-index: 99999;
+        pointer-events: none;
+      }
+      .canvimages img {
+        opacity: 0;
+        transition: all ease 0.6s;
+      }
+      .canvimages img:nth-child(1) {
+        opacity: 1;
+      }
+      .navbar {
+        width: 100%;
+        height: 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: rgba(71, 71, 71, 0.219);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        z-index: 999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+      }
+      .nav-heading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .nav-heading video {
+        margin-left: 10px;
+        height: 20px;
+        background: transparent;
+        width: 20px;
+      }
+      .navtime,
+      .navcontent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+      }
+    
+    </style>
+  </head>
+  <body>
+    <div class="cursor"></div>
+    <div id="loader">
+      <video src="./load.mp4" loop muted autoplay></video>
+    </div>
+
+    <div class="main font-[font1] relative w-full bg-zinc-900">
+      <div class="navbar">
+        <div class="nav-heading">
+          <h1 class="font-[600] text-2xl">Doze-Studio</h1>
+          <video src="./logoAnim.mp4" loop muted autoplay></video>
+        </div>
+        <div class="navcontent">
+          <h4 class="tracking-tighter font-[400] text-xl">Projects,</h4>
+          <h4 class="tracking-tighter font-[400] text-xl">About,</h4>
+          <h4 class="tracking-tighter font-[400] text-xl">Labs</h4>
+        </div>
+        <div class="navtime">
+          <h3 class="date-time tracking-tighter text-sm mr-6 leading-none">
+            <span class="date"></span>
+            <span class="time"></span>
+          </h3>
+          <h3 class="font-[500] text-xl">LETS TALK</h3>
+        </div>
+      </div>
+      <div class="parent relative top-0 w-full h-[1400vh]">
+        <div class="w-full sticky top-0 left-0 h-screen overflow-x-hidden">
+          <canvas class="w-full h-screen" id="frame"></canvas>
+          <div
+            class="absolute animate1 z-[2] text-white bottom-10 w-1/2 left-10"
+          >
+            <h1 class="leading-20 font-[300] text-3xl">&copy; 2024 DOZE STD</h1>
+            <h1 class="text-3xl font-[500] uppercase">
+              shaping brands → crafting motion
+            </h1>
+          </div>
+          <div
+            class="absolute opacity-0 animate2 z-[2] bottom-10 flex text-white flex-col align-center justify-center w-1/2 right-10 text-right"
+          >
+            <h1 class="font-[font1] leading-20 font-[700] uppercase text-5xl">
+              Transforming vision
+            </h1>
+            <h1 class="w-full text-2xl">
+              Building identity and inspiring action. Sculpting digital
+              experience the resonate.
+            </h1>
+          </div>
+          <div
+            class="absolute animate3 z-[2] text-white top-1/2 left-1/2 opacity-0 -translate-x-1/2 -translate-y-1/2 text-center"
+          >
+            <h1 class="leading-28 font-[400] uppercase text-6xl">
+              Elevating Aesthetics
+            </h1>
+            <h1 class="text-xl">
+              Crafting solutions and exploring new horizons. Evolving narratives
+              and elevating aesthetics in every project.
+            </h1>
+          </div>
+          <div
+            class="w-1/3 panel translate-x-full h-screen bg-white absolute right-0 top-0 z-[2] p-10"
+          >
+            <h3 class="panelelem text-xl font-[800]">© 2024 Doze.Std</h3>
+            <p class="panelelem mt-10 text-xl leading-none">
+              Sculpting Digital Transforming visions into digital realities.
+              Weaving stories that captivate and innovate. Exploring new
+              possibilities with a focus on narrative evolution. Crafting
+              solutions that engage and elevate.
+            </p>
+            <button
+              class="but1 panelelem border-[1px] px-3 py-2 border-[#555] font-[500] mt-6"
+            >
+              Get Reviews →
+            </button>
+            <div class="panelelem absolute bottom-10">
+              <h3 class="text-xl">Innovating Design</h3>
+              <p class="text-sm mt-3">
+                Connecting ideas to foster creativity. Designing impactful
+                experiences that resonate. Feel free to mix and match these
+                sections to suit your website's design needs!
+              </p>
+              <button
+                class="but2 bg-black text-white px-7 text-sm mt-4 py-4 font-[500] capitalize"
+              >
+                experience
+              </button>
+            </div>
+          </div>
+          <div
+            class="absolute z-[2] panelism text-white w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-5xl tracking-tighter opacity-0"
+          >
+            &copy; Panelise
+            <span class="line w-10 h-1 bg-white inline-block"></span> 2024
+          </div>
+        </div>
+      </div>
+      <div class="w-full p-10 bg-white">
+        <h1 class="text-6xl tracking-tighter">&reg; Our Recent Works.</h1>
+        <div class="w-full flex gap-5">
+          <div class="w-1/2 headings flex flex-col gap-8 p-10 py-56">
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Zonk Blerp</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Flibble Sprock</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Quarn Blap</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Frizzle Bump</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Plonk Zorp</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Slibber Klop</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Glonk Dribble</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Wibble Zurf</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Twizzle Blurb</h3>
+            <h3 class="text-5xl opacity-0.1 hover:opacity-1">Snarp Woogle</h3>
+          </div>
+          <div class="w-1/2 h-screen relative mt-72">
+            <div
+              class="canvimages w-[30vw] h-[40vw] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            >
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/first.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/second.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/third.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/fourth.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/fifth.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/sixth.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/seventh.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/eight.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/ninth.jpg"
+                alt=""
+              />
+              <img
+                class="absolute w-full h-full object-cover rounded-md"
+                src="./images2/tenth.jpg"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+
+    <script>
+
+      const datecontent = document.querySelector(".date-time .date");
+      const timecontent = document.querySelector(".date-time .time");
+      const time = Date();
+      timecontent.innerHTML = time.slice("").substring(16, 21);
+      datecontent.innerHTML = `${time.slice("").substring(0, 7)} :`;
+
+      const nav = document.querySelector(".navbar");
+      const body = document.querySelector("body");
+      body.addEventListener("wheel", function (dets) {
+        // console.log(dets);
+        if (dets.deltaY > 0) {
+          gsap.to(nav, {
+            y: "-100%",
+            duration: 0.9,
+          });
+        }
+        if (dets.deltaY < 0) {
+          gsap.to(nav, {
+            y: 0,
+            duration: 0.9,
+          });
+        }
+      });
+
+      function loader() {
+        var t1 = gsap.timeline();
+        t1.from("#loader video", {
+          x: 40,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.1,
+        });
+        t1.to("#loader video", {
+          x: -40,
+          opacity: 0,
+          delay: 4,
+          duration: 2,
+        });
+        t1.to("#loader", {
+          y: "-100%",
+          duration: 1,
+        });
+        t1.to("#loader", {
+          display: "none",
+        });
+      }
+
+      loader();
+
+      // Initialize Lenis
+      const lenis = new Lenis();
+      // Use requestAnimationFrame to continuously update the scroll
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      const canvas = document.querySelector("canvas");
+      const context = canvas.getContext("2d");
+
+      const frames = {
+        currentIndex: 0,
+        maxIndex: 1345,
+      };
+
+      let imagesLoaded = 0;
+      const images = [];
+
+      function preloadImages() {
+        for (var i = 1; i <= frames.maxIndex; i++) {
+          const imageUrl = `./images/frame_${i
+            .toString()
+            .padStart(4, "0")}.jpg`;
+          const img = new Image();
+          img.src = imageUrl;
+          img.onload = () => {
+            imagesLoaded++;
+            if (imagesLoaded === frames.maxIndex) {
+              loadImage(frames.currentIndex);
+              startAnimation();
+            }
+          };
+          images.push(img);
+        }
+      }
+
+      function loadImage(index) {
+        if (index >= 0 && index <= frames.maxIndex) {
+          const img = images[index];
+
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          const scaleX = canvas.width / img.width;
+          const scaleY = canvas.height / img.height;
+          const scale = Math.max(scaleX, scaleY);
+
+          const newWidth = img.width * scale;
+          const newHeight = img.height * scale;
+
+          const offsetX = (canvas.width - newWidth) / 2;
+          const offsetY = (canvas.height - newHeight) / 2;
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          frames.currentIndex = index;
+        }
+      }
+
+      function startAnimation() {
+        var tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".parent",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 2,
+          },
+        });
+
+        function updateFrame(index = frames.maxIndex - 1) {
+          return {
+            currentIndex: index,
+            ease: "linear",
+            onUpdate: function () {
+              loadImage(Math.floor(frames.currentIndex));
+            },
+          };
+        }
+
+        tl.to(frames, updateFrame(150), "first")
+          .to(
+            ".animate1",
+            {
+              opacity: 0,
+              ease: "linear",
+            },
+            "first"
+          )
+          .to(frames, updateFrame(280), "secound")
+          .to(
+            ".animate2",
+            {
+              opacity: 1,
+              ease: "linear",
+            },
+            "secound"
+          )
+          .to(frames, updateFrame(450), "third")
+          .to(
+            ".animate2",
+            {
+              opacity: 0,
+              ease: "linear",
+            },
+            "third"
+          )
+          .to(frames, updateFrame(590), "forth")
+          .to(
+            ".animate3",
+            {
+              opacity: 1,
+              ease: "linear",
+            },
+            "forth"
+          )
+          .to(frames, updateFrame(760), "fifth")
+          .to(
+            ".animate3",
+            {
+              opacity: 0,
+              ease: "linear",
+            },
+            "fifth"
+          )
+          .to(frames, updateFrame(900), "sisth")
+          .to(
+            ".panel",
+            {
+              x: 0,
+              ease: "expo",
+            },
+            "sisth"
+          )
+          .to(frames, updateFrame(1000), "seventh")
+          .to(
+            ".panel",
+            {
+              opacity: 0,
+              x: "100%",
+              ease: "linear",
+            },
+            "seventh"
+          )
+          .to(frames, updateFrame(1090), "eighth")
+          .to(
+            "canvas",
+            {
+              scale: 0.5,
+              ease: "linear",
+            },
+            "eighth"
+          )
+          .to(frames, updateFrame(1160), "ninth")
+          .to(
+            ".panelism",
+            {
+              opacity: 1,
+              ease: "expo",
+            },
+            "ninth"
+          )
+          .to(frames, updateFrame(1200), "ninth")
+          .to(
+            ".panelism .line",
+            {
+              width: 200,
+              ease: "expo",
+            },
+            "ninth"
+          )
+          .to(frames, updateFrame(1295), "tenth")
+          .to(
+            "canvas",
+            {
+              scale: 1,
+              ease: "linear",
+            },
+            "tenth"
+          )
+          .to(frames, updateFrame(), "eleventh")
+          .to(
+            ".panelism",
+            {
+              scale: 1.4,
+              ease: "linear",
+            },
+            "eleventh"
+          );
+      }
+
+      window.addEventListener("resize", function () {
+        loadImage(Math.floor(frames.currentIndex));
+      });
+
+      document.querySelectorAll(".headings h3").forEach(function (elem) {
+        gsap.from(elem, {
+          scrollTrigger: {
+            trigger: elem,
+            start: "top 60%",
+            // markers: true,
+            end: "bottom 50%",
+            scrub: 2,
+          },
+          opacity: 0.2,
+        });
+        gsap.to(elem, {
+          scrollTrigger: {
+            trigger: elem,
+            start: "top 40%",
+            end: "top 35%",
+            // markers:true,
+            scrub: 2,
+          },
+          opacity: 0.2,
+        });
+      });
+
+      preloadImages();
+
+      const cursor = document.querySelector(".cursor");
+      function cursormove(xscale = 1, yscale = 1) {
+        window.addEventListener("mousemove", function (dets) {
+          // console.log(dets.clientX);
+          // console.log(dets.pageX);
+          const x = dets.pageX - 10; // Adjust to keep cursor centered
+          const y = dets.pageY - 10; // Adjust to keep cursor centered
+          cursor.style.opacity = 1;
+          cursor.style.transform = `translate(${x}px, ${y}px) scale(${xscale},${yscale})`;
+        });
+
+        window.addEventListener("mouseout", function (dets) {
+          cursor.style.opacity = 0;
+        });
+      }
+
+      var timer;
+
+      function mousechapta() {
+        var xscale = 1;
+        var yscale = 1;
+
+        var xprev = 0;
+        var yprev = 0;
+        window.addEventListener("mousemove", function (dets) {
+          clearTimeout(timer);
+          var xdiff = dets.clientX - xprev;
+          var ydiff = dets.clientY - yprev;
+          yprev = dets.clientY;
+          xprev = dets.clientX;
+
+          xscale = gsap.utils.clamp(0.8, 1.2, ydiff);
+          yscale = gsap.utils.clamp(0.8, 1.2, xdiff);
+
+          cursormove(xscale, yscale);
+
+          timer = setTimeout(function () {
+            cursor.style.transform = `translate(${dets.pageX}px,${dets.pageY}px) scale(1,1)`;
+          }, 100);
+        });
+      }
+      mousechapta();
+
+      cursormove();
+
+      const text = document.querySelectorAll(".headings h3");
+      const images2 = document.querySelectorAll(".canvimages img");
+
+      text.forEach((elem, index) => {
+        elem.addEventListener("mouseenter", function () {
+          // console.log(index)
+          elem.style.opacity=1;
+          showimage(index, 1);
+        });
+        elem.addEventListener("mouseleave", function () {
+          // console.log(index)
+          elem.style.opacity=.2;
+          showimage(index, 0);
+        });
+      });
+      function showimage(data, val) {
+        images2.forEach((img, index) => {
+          if (index === data) {
+            img.style.opacity = val;
+          } else {
+            img.style.opacity = 0;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
